@@ -1,0 +1,32 @@
+.terraform
+.terraform.lock.hcl
+.terraformrc
+.terragrunt-cache
+*.tfstate
+*.tfstate.*
+modules/**/.terraform.lock.hcl
+modules/**/aliased-providers.tf.json
+terraform.rc
+
+## Exclude '.env' and all '.tfvars' files, which are likely to contain sensitive
+## such as passwords, private keys, and other secrets.
+.env
+.envrc
+*.tfvars
+*.tfvars.*
+
+## Exclude override files that are used to override resources locally and should
+## not be checked in.
+*_override.tf
+*_override.tf.*
+override.tf
+override.tf.*
+
+## Exclude other files we don't need/want in the repo (IDE/OS directories, etc.)
+.bak
+.history
+.idea
+.vscode
+dev/
+devel/
+TODO*
