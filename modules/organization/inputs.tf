@@ -34,6 +34,13 @@ variable "members_team" {
   })
 }
 
+## Organization Moderation
+variable "blocked_users" {
+  default     = []
+  description = "The users to block from the organization"
+  type        = set(string)
+}
+
 ## Organization Policy and Settings
 variable "settings" {
   default     = {}

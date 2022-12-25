@@ -1,3 +1,8 @@
+resource "github_organization_block" "user" {
+  for_each = var.blocked_users
+  username = each.key
+}
+
 ## ========================================================================== ##
 ## Organization Membership and Team Management - Admins                       ##
 ## ========================================================================== ##
@@ -10,6 +15,13 @@ resource "github_membership" "admins" {
 
   role     = "admin"
   username = each.key
+
+  lifecycle {
+    precondition {
+      condition     = contains(keys(github_organization_block.user), each.key) != true
+      error_message = "Error: Blocked user '${each.key}' cannot be an admin"
+    }
+  }
 }
 
 resource "github_team" "admins" {
@@ -51,6 +63,10 @@ resource "github_membership" "members" {
     precondition {
       condition     = contains(keys(github_membership.admins), each.key) != true
       error_message = "Error: Admin user '${each.key}' cannot be a member"
+    }
+    precondition {
+      condition     = contains(keys(github_organization_block.user), each.key) != true
+      error_message = "Error: Blocked user '${each.key}' cannot be a member"
     }
   }
 }
