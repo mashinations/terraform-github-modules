@@ -75,3 +75,14 @@ variable "settings" {
     members_can_create_internal_repositories = optional(bool, false)
   })
 }
+
+## Organization Secrets
+variable "actions_secrets" {
+  default     = null
+  description = "A map of secrets to add to the organization for Actions"
+  type = map(object({
+    encrypted_value = string
+    repository_ids  = optional(set(string), null)
+    visibility      = optional(string, "private")
+  }))
+}

@@ -16,6 +16,12 @@ output "members_team" {
   value       = try(github_team.members[0], {})
 }
 
+output "actions_secrets" {
+  description = "A map of the organization's actions secrets"
+  sensitive   = true
+  value       = github_actions_organization_secret.identified_by
+}
+
 output "settings" {
   description = "A map of the organization settings for reference"
   value       = github_organization_settings.this

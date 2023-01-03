@@ -7,6 +7,7 @@ A Terraform module to manage a GitHub organization.
 
 - **Membership** - Manage the organization's members and their roles
 - **Moderation** - Manage the organization's blocked users
+- **Secrets** - Manage the organization's Actions secrets
 - **Settings** - Manage the organization's policies and settings
 
 # Getting Started
@@ -50,6 +51,13 @@ module "example" {
         advanced_security_enabled                = false
         members_can_create_internal_repositories = false
     }
+
+    actions_secrets = {
+        EXAMPLE_SECRET = {
+            encrypted_value = "igloQnADqDsndt+KTvoUF6iiPt/IndvcGRInLs2v72c7Dnm6ktLyTceWcNvQVU9dEdMp3gkTfXIlA2UlPpo="
+            visibility      = "private"
+        }
+    }
 }
 ```
 
@@ -77,6 +85,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [github_actions_organization_secret.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_organization_secret) | resource |
 | [github_membership.admins](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/membership) | resource |
 | [github_membership.members](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/membership) | resource |
 | [github_organization_block.user](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/organization_block) | resource |
@@ -92,6 +101,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_actions_secrets"></a> [actions\_secrets](#input\_actions\_secrets) | A map of secrets to add to the organization for Actions | <pre>map(object({<br>    encrypted_value = string<br>    repository_ids  = optional(set(string), null)<br>    visibility      = optional(string, "private")<br>  }))</pre> | `null` | no |
 | <a name="input_admins"></a> [admins](#input\_admins) | The users to add to the organization with the 'admin' role. | `set(string)` | `[]` | no |
 | <a name="input_admins_team"></a> [admins\_team](#input\_admins\_team) | The team to create and add all admins to. | <pre>object({<br>    name        = string<br>    description = optional(string, "Managed by Terraform")<br>    visibility  = optional(string, "closed")<br>  })</pre> | `null` | no |
 | <a name="input_billing_email"></a> [billing\_email](#input\_billing\_email) | The billing email for the organization | `string` | n/a | yes |
@@ -104,6 +114,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_actions_secrets"></a> [actions\_secrets](#output\_actions\_secrets) | A map of the organization's actions secrets |
 | <a name="output_admins"></a> [admins](#output\_admins) | A map of users added to the organization with the `admin` role |
 | <a name="output_admins_team"></a> [admins\_team](#output\_admins\_team) | The team created for admins, if requested |
 | <a name="output_members"></a> [members](#output\_members) | A map of users added to the organization with the `member` role |
