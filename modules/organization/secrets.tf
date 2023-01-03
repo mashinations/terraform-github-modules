@@ -7,3 +7,13 @@ resource "github_actions_organization_secret" "identified_by" {
   selected_repository_ids = each.value.repository_ids
   visibility              = each.value.visibility
 }
+
+resource "github_dependabot_organization_secret" "identified_by" {
+  for_each = var.dependabot_secrets != null ? var.dependabot_secrets : {}
+
+  secret_name = each.key
+
+  encrypted_value         = each.value.encrypted_value
+  selected_repository_ids = each.value.repository_ids
+  visibility              = each.value.visibility
+}

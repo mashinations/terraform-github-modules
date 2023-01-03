@@ -86,3 +86,13 @@ variable "actions_secrets" {
     visibility      = optional(string, "private")
   }))
 }
+
+variable "dependabot_secrets" {
+  default     = null
+  description = "A map of secrets to add to the organization for Dependabot"
+  type = map(object({
+    encrypted_value = string
+    repository_ids  = optional(set(string), null)
+    visibility      = optional(string, "private")
+  }))
+}

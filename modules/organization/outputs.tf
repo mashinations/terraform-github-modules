@@ -21,6 +21,11 @@ output "actions_secrets" {
   sensitive   = true
   value       = github_actions_organization_secret.identified_by
 }
+output "dependabot_secrets" {
+  description = "A map of the organization's dependabot secrets"
+  sensitive   = true
+  value       = github_dependabot_organization_secret.identified_by
+}
 
 output "settings" {
   description = "A map of the organization settings for reference"
