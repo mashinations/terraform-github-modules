@@ -34,6 +34,7 @@ module "example" {
         ## GitHub Settings
         default_repository_permission           = "read"
         dependabot_alerts_enabled               = true
+        dependabot_security_updates_enabled     = true
         dependency_graph_enabled                = true
         has_organization_projects               = false
         has_repository_projects                 = false
@@ -50,6 +51,7 @@ module "example" {
         ## GitHub Enterprise Settings
         advanced_security_enabled                = false
         members_can_create_internal_repositories = false
+        secret_scanning_push_protection_enabled  = false
     }
 
     actions_secrets = {
@@ -75,13 +77,13 @@ module "example" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 5.6 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 5.15 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_github"></a> [github](#provider\_github) | ~> 5.6 |
+| <a name="provider_github"></a> [github](#provider\_github) | ~> 5.15 |
 
 ## Modules
 
@@ -116,7 +118,7 @@ No modules.
 | <a name="input_dependabot_secrets"></a> [dependabot\_secrets](#input\_dependabot\_secrets) | A map of secrets to add to the organization for Dependabot | <pre>map(object({<br>    encrypted_value = string<br>    repository_ids  = optional(set(string), null)<br>    visibility      = optional(string, "private")<br>  }))</pre> | `null` | no |
 | <a name="input_members"></a> [members](#input\_members) | The users to add to the organization with the 'member' role. | `set(string)` | `[]` | no |
 | <a name="input_members_team"></a> [members\_team](#input\_members\_team) | The team to create and add all members to. | <pre>object({<br>    name        = string<br>    description = optional(string, "Managed by Terraform")<br>    visibility  = optional(string, "closed")<br>  })</pre> | `null` | no |
-| <a name="input_settings"></a> [settings](#input\_settings) | The settings to apply to the organization | <pre>object({<br>    blog             = optional(string)<br>    company          = optional(string)<br>    description      = optional(string)<br>    email            = optional(string)<br>    location         = optional(string)<br>    name             = optional(string)<br>    twitter_username = optional(string)<br><br>    ## GitHub Settings<br>    default_repository_permission           = optional(string, "read")<br>    dependabot_alerts_enabled               = optional(bool, true)<br>    dependency_graph_enabled                = optional(bool, true)<br>    has_organization_projects               = optional(bool, false)<br>    has_repository_projects                 = optional(bool, false)<br>    members_can_create_pages                = optional(bool, false)<br>    members_can_create_private_pages        = optional(bool, false)<br>    members_can_create_private_repositories = optional(bool, false)<br>    members_can_create_public_pages         = optional(bool, false)<br>    members_can_create_public_repositories  = optional(bool, false)<br>    members_can_create_repositories         = optional(bool, false)<br>    members_can_fork_private_repositories   = optional(bool, false)<br>    secret_scanning_enabled                 = optional(bool, true)<br>    web_commit_signoff_required             = optional(bool, false)<br><br>    ## GitHub Enterprise Settings<br>    advanced_security_enabled                = optional(bool, false)<br>    members_can_create_internal_repositories = optional(bool, false)<br>  })</pre> | `{}` | no |
+| <a name="input_settings"></a> [settings](#input\_settings) | The settings to apply to the organization | <pre>object({<br>    blog             = optional(string)<br>    company          = optional(string)<br>    description      = optional(string)<br>    email            = optional(string)<br>    location         = optional(string)<br>    name             = optional(string)<br>    twitter_username = optional(string)<br><br>    ## GitHub Settings<br>    default_repository_permission           = optional(string, "read")<br>    dependabot_alerts_enabled               = optional(bool, true)<br>    dependabot_security_updates_enabled     = optional(bool, true)<br>    dependency_graph_enabled                = optional(bool, true)<br>    has_organization_projects               = optional(bool, false)<br>    has_repository_projects                 = optional(bool, false)<br>    members_can_create_pages                = optional(bool, false)<br>    members_can_create_private_pages        = optional(bool, false)<br>    members_can_create_private_repositories = optional(bool, false)<br>    members_can_create_public_pages         = optional(bool, false)<br>    members_can_create_public_repositories  = optional(bool, false)<br>    members_can_create_repositories         = optional(bool, false)<br>    members_can_fork_private_repositories   = optional(bool, false)<br>    secret_scanning_enabled                 = optional(bool, true)<br>    web_commit_signoff_required             = optional(bool, false)<br><br>    ## GitHub Enterprise Settings<br>    advanced_security_enabled                = optional(bool, false)<br>    members_can_create_internal_repositories = optional(bool, false)<br>    secret_scanning_push_protection_enabled  = optional(bool, false)<br>  })</pre> | `{}` | no |
 
 ## Outputs
 

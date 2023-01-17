@@ -57,6 +57,7 @@ variable "settings" {
     ## GitHub Settings
     default_repository_permission           = optional(string, "read")
     dependabot_alerts_enabled               = optional(bool, true)
+    dependabot_security_updates_enabled     = optional(bool, true)
     dependency_graph_enabled                = optional(bool, true)
     has_organization_projects               = optional(bool, false)
     has_repository_projects                 = optional(bool, false)
@@ -73,6 +74,7 @@ variable "settings" {
     ## GitHub Enterprise Settings
     advanced_security_enabled                = optional(bool, false)
     members_can_create_internal_repositories = optional(bool, false)
+    secret_scanning_push_protection_enabled  = optional(bool, false)
   })
 }
 
