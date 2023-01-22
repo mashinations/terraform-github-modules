@@ -16,6 +16,15 @@ output "members_team" {
   value       = try(github_team.members[0], {})
 }
 
+output "security_managers" {
+  description = "A map of users added to the organization with the `security manager` role"
+  value       = github_membership.security_managers
+}
+output "security_managers_team" {
+  description = "The team created for security managers, if requested"
+  value       = try(github_team.security_managers[0], {})
+}
+
 output "actions_secrets" {
   description = "A map of the organization's actions secrets"
   sensitive   = true

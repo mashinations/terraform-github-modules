@@ -34,6 +34,21 @@ variable "members_team" {
   })
 }
 
+variable "security_managers" {
+  default     = []
+  description = "The users to add to the organization as security managers."
+  type        = set(string)
+}
+variable "security_managers_team" {
+  default     = null
+  description = "The team to create and add all security managers to."
+  type = object({
+    name        = string
+    description = optional(string, "Managed by Terraform")
+    visibility  = optional(string, "closed")
+  })
+}
+
 ## Organization Moderation
 variable "blocked_users" {
   default     = []
