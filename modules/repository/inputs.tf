@@ -3,6 +3,36 @@ variable "name" {
   type        = string
 }
 
+variable "branch_protections" {
+  default     = {}
+  description = "The branch protections to apply to the repository"
+  type = map(object({
+    allows_deletions                = optional(bool, false)
+    allows_force_pushes             = optional(bool, false)
+    blocks_creations                = optional(bool, false)
+    enforce_admins                  = optional(bool, true)
+    lock_branch                     = optional(bool, false)
+    push_restrictions               = optional(set(string), [])
+    require_conversation_resolution = optional(bool, true)
+    require_signed_commits          = optional(bool, false)
+    required_linear_history         = optional(bool, false)
+
+    required_pull_request_reviews = optional(object({
+      dismiss_stale_reviews           = optional(bool, true)
+      dismissal_restrictions          = optional(set(number), [])
+      pull_request_bypassers          = optional(set(string), [])
+      require_code_owner_reviews      = optional(bool, true)
+      required_approving_review_count = optional(number, 1)
+      require_last_push_approval      = optional(bool, true)
+      restrict_dismissals             = optional(bool, true)
+    }), {})
+    required_status_checks = optional(object({
+      contexts = optional(set(string), [])
+      strict   = optional(bool, true)
+    }), {})
+  }))
+}
+
 variable "settings" {
   default     = {}
   description = "The settings to apply to the repository"
