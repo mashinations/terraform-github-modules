@@ -3,6 +3,21 @@ variable "name" {
   type        = string
 }
 
+variable "branches" {
+  default     = {}
+  description = "A map of branches to create in the repository"
+  type = map(object({
+    is_default    = optional(bool, false)
+    source_branch = optional(string, null)
+    source_sha    = optional(string, null)
+  }))
+
+  validation {
+    condition     = length({ for k, v in var.branches : k => v if v.is_default }) <= 1
+    error_message = "Only one branch can be configured as the default"
+  }
+}
+
 variable "branch_protections" {
   default     = {}
   description = "The branch protections to apply to the repository"

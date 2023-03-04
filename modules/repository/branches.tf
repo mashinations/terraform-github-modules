@@ -1,5 +1,28 @@
+resource "github_branch" "identified_by" {
+  for_each = var.branches
+
+  branch        = each.key
+  repository    = github_repository.this.name
+  source_branch = each.value.source_branch
+  source_sha    = each.value.source_sha
+}
+
+resource "github_branch_default" "this" {
+  depends_on = [github_branch.identified_by]
+  for_each   = { for k, v in var.branches : k => v if v.is_default }
+
+  branch     = each.key
+  repository = github_repository.this.name
+
+  ## There's not really a reasonable way to support renaming
+  ## the default branch without causing grief for the module
+  ## user, so it's disabled for now.
+  rename = false
+}
+
 resource "github_branch_protection" "for_pattern" {
-  for_each = var.branch_protections
+  depends_on = [github_branch.identified_by]
+  for_each   = var.branch_protections
 
   pattern       = each.key
   repository_id = github_repository.this.node_id
