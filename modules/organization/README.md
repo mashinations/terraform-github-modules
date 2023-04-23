@@ -14,7 +14,7 @@ A Terraform module to manage a GitHub organization.
 
 ```hcl
 module "example" {
-    source = "github.com/mashinations/terraform-github//modules/organization?ref=master"
+    source = "github.com/mashinations/terraform-github//modules/organization?ref=main"
 
     billing_email = "example@example.com
     blocked_users = [ "example-blocked-user" ]
@@ -78,13 +78,13 @@ module "example" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 5.15 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 5.18 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_github"></a> [github](#provider\_github) | ~> 5.15 |
+| <a name="provider_github"></a> [github](#provider\_github) | ~> 5.18 |
 
 ## Modules
 

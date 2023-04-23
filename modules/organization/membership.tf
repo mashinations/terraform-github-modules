@@ -40,7 +40,7 @@ resource "github_team_members" "admins" {
   dynamic "members" {
     for_each = github_membership.admins
     content {
-      role     = "member"
+      role     = "maintainer"
       username = members.value.username
     }
   }
