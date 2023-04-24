@@ -48,6 +48,27 @@ variable "branch_protections" {
   }))
 }
 
+variable "collaborators" {
+  default     = {}
+  description = ""
+  type = object({
+    teams = optional(object({
+      admin    = optional(set(string), [])
+      maintain = optional(set(string), [])
+      pull     = optional(set(string), [])
+      push     = optional(set(string), [])
+      triage   = optional(set(string), [])
+    }), {})
+    users = optional(object({
+      admin    = optional(set(string), [])
+      maintain = optional(set(string), [])
+      pull     = optional(set(string), [])
+      push     = optional(set(string), [])
+      triage   = optional(set(string), [])
+    }), {})
+  })
+}
+
 variable "settings" {
   default     = {}
   description = "The settings to apply to the repository"
