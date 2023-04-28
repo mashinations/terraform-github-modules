@@ -61,27 +61,54 @@ variable "actions" {
   default     = {}
   description = "An object containing configuration settings for GitHub Actions"
   type = object({
+    allowed_actions = optional(string, "all")
+    allowed_actions_config = optional(object({
+      github_owned_allowed = optional(bool, true)
+      patterns_allowed     = optional(set(string), null)
+      verified_allowed     = optional(bool, false)
+    }), {})
+    enabled_repositories = optional(string, "all")
+    enabled_repositories_config = optional(object({
+      repository_ids = set(number)
+    }), null)
     secrets = optional(map(object({
       value          = string
       value_type     = optional(string, "encrypted")
-      repository_ids = optional(set(string), null)
+      repository_ids = optional(set(number), null)
       visibility     = optional(string, "private")
     })), {})
     variables = optional(map(object({
       value          = string
-      repository_ids = optional(set(string), null)
+      repository_ids = optional(set(number), null)
       visibility     = optional(string, "private")
     })), {})
   })
 
   validation {
+    condition = (
+      var.actions.enabled_repositories != "selected" ||
+      (var.actions.enabled_repositories == "selected" && var.actions.enabled_repositories_config != null)
+    )
+    error_message = "The 'enabled_repositories_config' argument must be set when 'enabled_repositories' is set to 'selected'."
+  }
+
+  validation {
     condition = alltrue([
       for k, v in var.actions.secrets : (
         v.visibility != "selected" ||
-        v.visibility == "selected" && v.repository_ids != null
+        (v.visibility == "selected" && v.repository_ids != null)
       )
     ])
-    error_message = "The 'repository_ids' argument must be set when 'visibility' is set to 'selected'."
+    error_message = "The 'repository_ids' argument must be set when the secret 'visibility' is set to 'selected'."
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.actions.variables : (
+        v.visibility != "selected" ||
+        (v.visibility == "selected" && v.repository_ids != null)
+      )
+    ])
+    error_message = "The 'repository_ids' argument must be set when the variable 'visibility' is set to 'selected'."
   }
 }
 
@@ -101,10 +128,10 @@ variable "dependabot" {
     condition = alltrue([
       for k, v in var.dependabot.secrets : (
         v.visibility != "selected" ||
-        v.visibility == "selected" && v.repository_ids != null
+        (v.visibility == "selected" && v.repository_ids != null)
       )
     ])
-    error_message = "The 'repository_ids' argument must be set when 'visibility' is set to 'selected'."
+    error_message = "The 'repository_ids' argument must be set when the secret 'visibility' is set to 'selected'."
   }
 }
 

@@ -5,11 +5,11 @@ A Terraform module to manage a GitHub organization.
 
 # Features
 
+- **Actions** - Manage Actions secrets, variables, and permissions
+- **Dependabot** - Manage Dependabot secrets
 - **Membership** - Manage the organization's members and their roles
 - **Moderation** - Manage the organization's blocked users
-- **Secrets** - Manage the organization's Actions and Dependabot secrets
 - **Settings** - Manage the organization's policies and settings
-- **Variables** - Manage the organization's Actions variables
 
 # Getting Started
 
@@ -57,6 +57,16 @@ module "example" {
   }
 
   actions = {
+    allowed_actions = "selected"
+    allowed_actions_config = {
+      github_owned_allowed = true
+      patterns_allowed     = ["example-org/*"]
+      verified_allowed     = true
+    }
+    enabled_repositories = "selected"
+    enabled_repositories_config = {
+      repository_ids = ["1234567890"]
+    }
     secrets = {
       EXAMPLE_SECRET_ENCRYPTED = { value = "15/KSzApItoMU5Gieg" }
       EXAMPLE_SECRET_PLAINTEXT = { value = "EXAMPLE_SECRET_PLAINTEXT", value_type = "plaintext" }
@@ -98,6 +108,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [github_actions_organization_permissions.this](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_organization_permissions) | resource |
 | [github_actions_organization_secret.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_organization_secret) | resource |
 | [github_actions_organization_variable.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_organization_variable) | resource |
 | [github_dependabot_organization_secret.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/dependabot_organization_secret) | resource |
@@ -121,7 +132,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_actions"></a> [actions](#input\_actions) | An object containing configuration settings for GitHub Actions | <pre>object({<br>    secrets = optional(map(object({<br>      value          = string<br>      value_type     = optional(string, "encrypted")<br>      repository_ids = optional(set(string), null)<br>      visibility     = optional(string, "private")<br>    })), {})<br>    variables = optional(map(object({<br>      value          = string<br>      repository_ids = optional(set(string), null)<br>      visibility     = optional(string, "private")<br>    })), {})<br>  })</pre> | `{}` | no |
+| <a name="input_actions"></a> [actions](#input\_actions) | An object containing configuration settings for GitHub Actions | <pre>object({<br>    allowed_actions = optional(string, "all")<br>    allowed_actions_config = optional(object({<br>      github_owned_allowed = optional(bool, true)<br>      patterns_allowed     = optional(set(string), null)<br>      verified_allowed     = optional(bool, false)<br>    }), {})<br>    enabled_repositories = optional(string, "all")<br>    enabled_repositories_config = optional(object({<br>      repository_ids = set(number)<br>    }), null)<br>    secrets = optional(map(object({<br>      value          = string<br>      value_type     = optional(string, "encrypted")<br>      repository_ids = optional(set(number), null)<br>      visibility     = optional(string, "private")<br>    })), {})<br>    variables = optional(map(object({<br>      value          = string<br>      repository_ids = optional(set(number), null)<br>      visibility     = optional(string, "private")<br>    })), {})<br>  })</pre> | `{}` | no |
 | <a name="input_admins"></a> [admins](#input\_admins) | The users to add to the organization with the 'admin' role. | `set(string)` | `[]` | no |
 | <a name="input_admins_team"></a> [admins\_team](#input\_admins\_team) | The team to create and add all admins to. | <pre>object({<br>    name        = string<br>    description = optional(string, "Managed by Terraform")<br>    visibility  = optional(string, "closed")<br>  })</pre> | `null` | no |
 | <a name="input_billing_email"></a> [billing\_email](#input\_billing\_email) | The billing email for the organization | `string` | n/a | yes |
