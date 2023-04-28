@@ -56,7 +56,58 @@ variable "blocked_users" {
   type        = set(string)
 }
 
-## Organization Policy and Settings
+## Organization Features, Policies, and Settings
+variable "actions" {
+  default     = {}
+  description = "An object containing configuration settings for GitHub Actions"
+  type = object({
+    secrets = optional(map(object({
+      value          = string
+      value_type     = optional(string, "encrypted")
+      repository_ids = optional(set(string), null)
+      visibility     = optional(string, "private")
+    })), {})
+    variables = optional(map(object({
+      value          = string
+      repository_ids = optional(set(string), null)
+      visibility     = optional(string, "private")
+    })), {})
+  })
+
+  validation {
+    condition = alltrue([
+      for k, v in var.actions.secrets : (
+        v.visibility != "selected" ||
+        v.visibility == "selected" && v.repository_ids != null
+      )
+    ])
+    error_message = "The 'repository_ids' argument must be set when 'visibility' is set to 'selected'."
+  }
+}
+
+variable "dependabot" {
+  default     = {}
+  description = "An object containing configuration settings for GitHub Dependabot"
+  type = object({
+    secrets = optional(map(object({
+      value          = string
+      value_type     = optional(string, "encrypted")
+      repository_ids = optional(set(string), null)
+      visibility     = optional(string, "private")
+    })), {})
+  })
+
+  validation {
+    condition = alltrue([
+      for k, v in var.dependabot.secrets : (
+        v.visibility != "selected" ||
+        v.visibility == "selected" && v.repository_ids != null
+      )
+    ])
+    error_message = "The 'repository_ids' argument must be set when 'visibility' is set to 'selected'."
+  }
+}
+
 variable "settings" {
   default     = {}
   description = "The settings to apply to the organization"
@@ -91,25 +142,4 @@ variable "settings" {
     members_can_create_internal_repositories = optional(bool, false)
     secret_scanning_push_protection_enabled  = optional(bool, false)
   })
-}
-
-## Organization Secrets
-variable "actions_secrets" {
-  default     = null
-  description = "A map of secrets to add to the organization for Actions"
-  type = map(object({
-    encrypted_value = string
-    repository_ids  = optional(set(string), null)
-    visibility      = optional(string, "private")
-  }))
-}
-
-variable "dependabot_secrets" {
-  default     = null
-  description = "A map of secrets to add to the organization for Dependabot"
-  type = map(object({
-    encrypted_value = string
-    repository_ids  = optional(set(string), null)
-    visibility      = optional(string, "private")
-  }))
 }
