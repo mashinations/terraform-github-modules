@@ -3,6 +3,7 @@ variable "name" {
   type        = string
 }
 
+## Repository Branches and Branch Protections
 variable "branches" {
   default     = {}
   description = "A map of branches to create in the repository"
@@ -48,9 +49,10 @@ variable "branch_protections" {
   }))
 }
 
+## Repository Collaborators
 variable "collaborators" {
   default     = {}
-  description = ""
+  description = "The teams and users to add as collaborators to the repository"
   type = object({
     teams = optional(object({
       admin    = optional(set(string), [])
@@ -66,6 +68,32 @@ variable "collaborators" {
       push     = optional(set(string), [])
       triage   = optional(set(string), [])
     }), {})
+  })
+}
+
+## Repository Features, Policies, and Settings
+variable "actions" {
+  default     = {}
+  description = "An object containing configuration settings for GitHub Actions"
+  type = object({
+    secrets = optional(map(object({
+      value      = string
+      value_type = optional(string, "encrypted")
+    })), {})
+    variables = optional(map(object({
+      value = string
+    })), {})
+  })
+}
+
+variable "dependabot" {
+  default     = {}
+  description = "An object containing configuration settings for GitHub Dependabot"
+  type = object({
+    secrets = optional(map(object({
+      value      = string
+      value_type = optional(string, "encrypted")
+    })), {})
   })
 }
 
