@@ -1,3 +1,19 @@
+resource "github_actions_repository_permissions" "this" {
+  repository = github_repository.this.name
+
+  allowed_actions = var.actions.allowed_actions
+
+  dynamic "allowed_actions_config" {
+    for_each = var.actions.allowed_actions == "selected" ? var.actions.allowed_actions_config[*] : []
+
+    content {
+      github_owned_allowed = allowed_actions_config.value.github_owned_allowed
+      patterns_allowed     = allowed_actions_config.value.patterns_allowed
+      verified_allowed     = allowed_actions_config.value.verified_allowed
+    }
+  }
+}
+
 resource "github_actions_secret" "identified_by" {
   depends_on = [github_repository.this]
   for_each   = var.actions.secrets

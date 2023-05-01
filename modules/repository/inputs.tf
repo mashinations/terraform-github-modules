@@ -76,6 +76,12 @@ variable "actions" {
   default     = {}
   description = "An object containing configuration settings for GitHub Actions"
   type = object({
+    allowed_actions = optional(string, "all")
+    allowed_actions_config = optional(object({
+      github_owned_allowed = optional(bool, true)
+      patterns_allowed     = optional(set(string), null)
+      verified_allowed     = optional(bool, true)
+    }), {})
     secrets = optional(map(object({
       value      = string
       value_type = optional(string, "encrypted")

@@ -8,7 +8,7 @@ A Terraform module to create and manage a GitHub repository and various reposito
 
 In addition to creating the specified repository, the following features are supported:
 
-- **Actions** - Manage Actions secrets and variables
+- **Actions** - Manage Actions secrets, variables, and permissions
 - **Branch Management** - Create branches and optionally designate one as the default branch
 - **Branch Protections** - Create branch protections for branches matching the specified pattern(s)
 - **Collaborators** - Grant teams or users access to the repository with the specified permissions
@@ -90,6 +90,12 @@ module "example" {
   }
 
   actions = {
+    allowed_actions = "selected"
+    allowed_actions_config = {
+      github_owned_allowed = true
+      patterns_allowed     = ["example-org/*"]
+      verified_allowed     = true
+    }
     secrets = {
       EXAMPLE_SECRET_ENCRYPTED = { value = "15/KSzApItoMU5Gieg" }
       EXAMPLE_SECRET_PLAINTEXT = { value = "EXAMPLE_SECRET_PLAINTEXT", value_type = "plaintext" }
@@ -131,6 +137,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [github_actions_repository_permissions.this](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_repository_permissions) | resource |
 | [github_actions_secret.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
 | [github_actions_variable.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_variable) | resource |
 | [github_branch.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch) | resource |
@@ -144,7 +151,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_actions"></a> [actions](#input\_actions) | An object containing configuration settings for GitHub Actions | <pre>object({<br>    secrets = optional(map(object({<br>      value      = string<br>      value_type = optional(string, "encrypted")<br>    })), {})<br>    variables = optional(map(object({<br>      value = string<br>    })), {})<br>  })</pre> | `{}` | no |
+| <a name="input_actions"></a> [actions](#input\_actions) | An object containing configuration settings for GitHub Actions | <pre>object({<br>    allowed_actions = optional(string, "all")<br>    allowed_actions_config = optional(object({<br>      github_owned_allowed = optional(bool, true)<br>      patterns_allowed     = optional(set(string), null)<br>      verified_allowed     = optional(bool, true)<br>    }), {})<br>    secrets = optional(map(object({<br>      value      = string<br>      value_type = optional(string, "encrypted")<br>    })), {})<br>    variables = optional(map(object({<br>      value = string<br>    })), {})<br>  })</pre> | `{}` | no |
 | <a name="input_branch_protections"></a> [branch\_protections](#input\_branch\_protections) | The branch protections to apply to the repository | <pre>map(object({<br>    allows_deletions                = optional(bool, false)<br>    allows_force_pushes             = optional(bool, false)<br>    blocks_creations                = optional(bool, false)<br>    enforce_admins                  = optional(bool, true)<br>    lock_branch                     = optional(bool, false)<br>    push_restrictions               = optional(set(string), [])<br>    require_conversation_resolution = optional(bool, true)<br>    require_signed_commits          = optional(bool, false)<br>    required_linear_history         = optional(bool, false)<br><br>    required_pull_request_reviews = optional(object({<br>      dismiss_stale_reviews           = optional(bool, true)<br>      dismissal_restrictions          = optional(set(number), [])<br>      pull_request_bypassers          = optional(set(string), [])<br>      require_code_owner_reviews      = optional(bool, true)<br>      required_approving_review_count = optional(number, 1)<br>      require_last_push_approval      = optional(bool, true)<br>      restrict_dismissals             = optional(bool, true)<br>    }), {})<br>    required_status_checks = optional(object({<br>      contexts = optional(set(string), [])<br>      strict   = optional(bool, true)<br>    }), {})<br>  }))</pre> | `{}` | no |
 | <a name="input_branches"></a> [branches](#input\_branches) | A map of branches to create in the repository | <pre>map(object({<br>    is_default    = optional(bool, false)<br>    source_branch = optional(string, null)<br>    source_sha    = optional(string, null)<br>  }))</pre> | `{}` | no |
 | <a name="input_collaborators"></a> [collaborators](#input\_collaborators) | The teams and users to add as collaborators to the repository | <pre>object({<br>    teams = optional(object({<br>      admin    = optional(set(string), [])<br>      maintain = optional(set(string), [])<br>      pull     = optional(set(string), [])<br>      push     = optional(set(string), [])<br>      triage   = optional(set(string), [])<br>    }), {})<br>    users = optional(object({<br>      admin    = optional(set(string), [])<br>      maintain = optional(set(string), [])<br>      pull     = optional(set(string), [])<br>      push     = optional(set(string), [])<br>      triage   = optional(set(string), [])<br>    }), {})<br>  })</pre> | `{}` | no |
