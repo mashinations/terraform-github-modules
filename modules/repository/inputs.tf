@@ -103,6 +103,22 @@ variable "dependabot" {
   })
 }
 
+variable "environments" {
+  default     = {}
+  description = "The environments to create and manage for the repository"
+  type = map(object({
+    deployment_branch_policy = optional(object({
+      custom_branch_policies = optional(bool, false)
+      protected_branches     = optional(bool, true)
+    }), {})
+    reviewers = optional(object({
+      teams = optional(set(number), [])
+      users = optional(set(number), [])
+    }), {})
+    wait_timer = optional(number, null)
+  }))
+}
+
 variable "settings" {
   default     = {}
   description = "The settings to apply to the repository"
