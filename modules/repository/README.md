@@ -13,7 +13,7 @@ In addition to creating the specified repository, the following features are sup
 - **Branch Protections** - Create branch protections for branches matching the specified pattern(s)
 - **Collaborators** - Grant teams or users access to the repository with the specified permissions
 - **Dependabot** - Manage Dependabot secrets
-- **Environments** - Manage the repository's environments
+- **Environments** - Manage the repository's environments and associated secrets/variables
 - **Settings** - Manage the repository's policies and settings
 
 # Getting Started
@@ -66,6 +66,13 @@ module "example" {
         protected_branches     = true
       }
       reviewers  = { teams = [1234567890], users = [1234567890] }
+      secrets = {
+        EXAMPLE_SECRET_ENCRYPTED = { value = "15/KSzApItoMU5Gieg" }
+        EXAMPLE_SECRET_PLAINTEXT = { value = "EXAMPLE_SECRET_PLAINTEXT", value_type = "plaintext" }
+      }
+      variables = {
+        EXAMPLE_VARIABLE = { value = "EXAMPLE_VARIABLE" }
+      }
       wait_timer = 120
     }
   }
@@ -149,6 +156,8 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [github_actions_environment_secret.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_environment_secret) | resource |
+| [github_actions_environment_variable.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_environment_variable) | resource |
 | [github_actions_repository_permissions.this](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_repository_permissions) | resource |
 | [github_actions_secret.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
 | [github_actions_variable.identified_by](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_variable) | resource |
@@ -169,7 +178,7 @@ No modules.
 | <a name="input_branches"></a> [branches](#input\_branches) | A map of branches to create in the repository | <pre>map(object({<br>    is_default    = optional(bool, false)<br>    source_branch = optional(string, null)<br>    source_sha    = optional(string, null)<br>  }))</pre> | `{}` | no |
 | <a name="input_collaborators"></a> [collaborators](#input\_collaborators) | The teams and users to add as collaborators to the repository | <pre>object({<br>    teams = optional(object({<br>      admin    = optional(set(string), [])<br>      maintain = optional(set(string), [])<br>      pull     = optional(set(string), [])<br>      push     = optional(set(string), [])<br>      triage   = optional(set(string), [])<br>    }), {})<br>    users = optional(object({<br>      admin    = optional(set(string), [])<br>      maintain = optional(set(string), [])<br>      pull     = optional(set(string), [])<br>      push     = optional(set(string), [])<br>      triage   = optional(set(string), [])<br>    }), {})<br>  })</pre> | `{}` | no |
 | <a name="input_dependabot"></a> [dependabot](#input\_dependabot) | An object containing configuration settings for GitHub Dependabot | <pre>object({<br>    secrets = optional(map(object({<br>      value      = string<br>      value_type = optional(string, "encrypted")<br>    })), {})<br>  })</pre> | `{}` | no |
-| <a name="input_environments"></a> [environments](#input\_environments) | The environments to create and manage for the repository | <pre>map(object({<br>    deployment_branch_policy = optional(object({<br>      custom_branch_policies = optional(bool, false)<br>      protected_branches     = optional(bool, true)<br>    }), {})<br>    reviewers = optional(object({<br>      teams = optional(set(number), [])<br>      users = optional(set(number), [])<br>    }), {})<br>    wait_timer = optional(number, null)<br>  }))</pre> | `{}` | no |
+| <a name="input_environments"></a> [environments](#input\_environments) | The environments to create and manage for the repository | <pre>map(object({<br>    deployment_branch_policy = optional(object({<br>      custom_branch_policies = optional(bool, false)<br>      protected_branches     = optional(bool, true)<br>    }), {})<br>    reviewers = optional(object({<br>      teams = optional(set(number), [])<br>      users = optional(set(number), [])<br>    }), {})<br>    secrets = optional(map(object({<br>      value      = string<br>      value_type = optional(string, "encrypted")<br>    })), {})<br>    variables = optional(map(object({<br>      value = string<br>    })), {})<br>    wait_timer = optional(number, null)<br>  }))</pre> | `{}` | no |
 | <a name="input_name"></a> [name](#input\_name) | The name of the GitHub repository | `string` | n/a | yes |
 | <a name="input_settings"></a> [settings](#input\_settings) | The settings to apply to the repository | <pre>object({<br>    archived           = optional(bool, false)<br>    auto_init          = optional(bool, true)<br>    description        = optional(string, null)<br>    gitignore_template = optional(string, null)<br>    homepage_url       = optional(string, null)<br>    is_template        = optional(bool, false)<br>    license_template   = optional(string, null)<br>    topics             = optional(set(string), [])<br>    visibility         = optional(string, "private")<br><br>    template = optional(object({<br>      owner      = string<br>      repository = string<br>    }))<br><br>    ## Feature Configuration<br>    has_discussions = optional(bool, false)<br>    has_issues      = optional(bool, true)<br>    has_projects    = optional(bool, false)<br>    has_wiki        = optional(bool, false)<br><br>    pages = optional(object({<br>      source = object({<br>        branch = optional(string, "main")<br>        path   = optional(string, "/")<br>      })<br>      cname = optional(string, null)<br>    }))<br><br>    ## Policy Configuration<br>    allow_auto_merge            = optional(bool, false)<br>    allow_merge_commit          = optional(bool, true)<br>    allow_rebase_merge          = optional(bool, true)<br>    allow_squash_merge          = optional(bool, true)<br>    allow_update_branch         = optional(bool, true)<br>    archive_on_destroy          = optional(bool, true)<br>    delete_branch_on_merge      = optional(bool, true)<br>    merge_commit_message        = optional(string, "BLANK")<br>    merge_commit_title          = optional(string, "PR_TITLE")<br>    squash_merge_commit_message = optional(string, "COMMIT_MESSAGES")<br>    squash_merge_commit_title   = optional(string, "PR_TITLE")<br>    vulnerability_alerts        = optional(bool, true)<br>  })</pre> | `{}` | no |
 
@@ -177,7 +186,9 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_branch_protections"></a> [branch\_protections](#output\_branch\_protections) | A map of the branch protections |
-| <a name="output_environments"></a> [environments](#output\_environments) | A map of the environments |
-| <a name="output_settings"></a> [settings](#output\_settings) | A map of the repository settings |
+| <a name="output_branch_protections"></a> [branch\_protections](#output\_branch\_protections) | A map of branch protection objects keyed by pattern |
+| <a name="output_environment_secrets"></a> [environment\_secrets](#output\_environment\_secrets) | A map of environment secret objects keyed by environment name and secret name |
+| <a name="output_environment_variables"></a> [environment\_variables](#output\_environment\_variables) | A map of environment variable objects keyed by environment name and variable name |
+| <a name="output_environments"></a> [environments](#output\_environments) | A map of environment objects keyed by environment name |
+| <a name="output_settings"></a> [settings](#output\_settings) | The current settings for the repository |
 <!-- END_TF_DOCS -->

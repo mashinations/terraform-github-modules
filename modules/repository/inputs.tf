@@ -115,6 +115,13 @@ variable "environments" {
       teams = optional(set(number), [])
       users = optional(set(number), [])
     }), {})
+    secrets = optional(map(object({
+      value      = string
+      value_type = optional(string, "encrypted")
+    })), {})
+    variables = optional(map(object({
+      value = string
+    })), {})
     wait_timer = optional(number, null)
   }))
 }

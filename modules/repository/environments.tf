@@ -16,3 +16,41 @@ resource "github_repository_environment" "identified_by" {
     users = each.value.reviewers.users
   }
 }
+
+resource "github_actions_environment_secret" "identified_by" {
+  for_each = merge([
+    for env, envCfg in var.environments : merge(
+      { for secret, secretCfg in envCfg.secrets : "${env}:${secret}" => {
+        env_name          = env
+        secret_name       = secret
+        secret_value      = secretCfg.value
+        secret_value_type = secretCfg.value_type
+        }
+    })
+  ]...)
+
+  environment = github_repository_environment.identified_by[each.value.env_name].environment
+  repository  = github_repository.this.name
+
+  encrypted_value = each.value.secret_value_type == "encrypted" ? each.value.secret_value : null
+  plaintext_value = each.value.secret_value_type == "plaintext" ? each.value.secret_value : null
+  secret_name     = each.value.secret_name
+}
+
+resource "github_actions_environment_variable" "identified_by" {
+  for_each = merge([
+    for env, envCfg in var.environments : merge(
+      { for variable, variableCfg in envCfg.variables : "${env}:${variable}" => {
+        env_name       = env
+        variable_name  = variable
+        variable_value = variableCfg.value
+        }
+    })
+  ]...)
+
+  environment = github_repository_environment.identified_by[each.value.env_name].environment
+  repository  = github_repository.this.name
+
+  value         = each.value.variable_value
+  variable_name = each.value.variable_name
+}
