@@ -186,7 +186,13 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_actions_permissions"></a> [actions\_permissions](#output\_actions\_permissions) | The current permissions for Actions |
+| <a name="output_actions_secrets"></a> [actions\_secrets](#output\_actions\_secrets) | A map of Actions secret objects keyed by secret name |
+| <a name="output_actions_variables"></a> [actions\_variables](#output\_actions\_variables) | A map of Actions variable objects keyed by variable name |
 | <a name="output_branch_protections"></a> [branch\_protections](#output\_branch\_protections) | A map of branch protection objects keyed by pattern |
+| <a name="output_branches"></a> [branches](#output\_branches) | A map of branch objects keyed by branch name |
+| <a name="output_collaborators"></a> [collaborators](#output\_collaborators) | The collaborators object listing teams and users with access |
+| <a name="output_dependabot_secrets"></a> [dependabot\_secrets](#output\_dependabot\_secrets) | A map of Dependabot secret objects keyed by secret name |
 | <a name="output_environment_secrets"></a> [environment\_secrets](#output\_environment\_secrets) | A map of environment secret objects keyed by environment name and secret name |
 | <a name="output_environment_variables"></a> [environment\_variables](#output\_environment\_variables) | A map of environment variable objects keyed by environment name and variable name |
 | <a name="output_environments"></a> [environments](#output\_environments) | A map of environment objects keyed by environment name |

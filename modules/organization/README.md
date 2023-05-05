@@ -148,10 +148,13 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_actions_secrets"></a> [actions\_secrets](#output\_actions\_secrets) | A map of the organization's actions secrets |
+| <a name="output_actions_permnissions"></a> [actions\_permnissions](#output\_actions\_permnissions) | The current permissions for Actions |
+| <a name="output_actions_secrets"></a> [actions\_secrets](#output\_actions\_secrets) | A map of Actions secret objects keyed by secret name |
+| <a name="output_actions_variables"></a> [actions\_variables](#output\_actions\_variables) | A map of Actions variable objects keyed by variable name |
 | <a name="output_admins"></a> [admins](#output\_admins) | A map of users added to the organization with the `admin` role |
 | <a name="output_admins_team"></a> [admins\_team](#output\_admins\_team) | The team created for admins, if requested |
-| <a name="output_dependabot_secrets"></a> [dependabot\_secrets](#output\_dependabot\_secrets) | A map of the organization's dependabot secrets |
+| <a name="output_blocked_users"></a> [blocked\_users](#output\_blocked\_users) | A map of users blocked from the organization |
+| <a name="output_dependabot_secrets"></a> [dependabot\_secrets](#output\_dependabot\_secrets) | A map of Dependabot secret objects keyed by secret name |
 | <a name="output_members"></a> [members](#output\_members) | A map of users added to the organization with the `member` role |
 | <a name="output_members_team"></a> [members\_team](#output\_members\_team) | The team created for members, if requested |
 | <a name="output_security_managers"></a> [security\_managers](#output\_security\_managers) | A map of users added to the organization with the `security manager` role |
