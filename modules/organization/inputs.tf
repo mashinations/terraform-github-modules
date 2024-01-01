@@ -15,7 +15,7 @@ variable "admins_team" {
   type = object({
     name        = string
     description = optional(string, "Managed by Terraform")
-    visibility  = optional(string, "closed")
+    privacy     = optional(string, "closed")
   })
 }
 
@@ -30,7 +30,7 @@ variable "members_team" {
   type = object({
     name        = string
     description = optional(string, "Managed by Terraform")
-    visibility  = optional(string, "closed")
+    privacy     = optional(string, "closed")
   })
 }
 
@@ -45,7 +45,7 @@ variable "security_managers_team" {
   type = object({
     name        = string
     description = optional(string, "Managed by Terraform")
-    visibility  = optional(string, "closed")
+    privacy     = optional(string, "closed")
   })
 }
 
