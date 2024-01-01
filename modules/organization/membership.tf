@@ -29,7 +29,7 @@ resource "github_team" "admins" {
 
   description = var.admins_team.description
   name        = var.admins_team.name
-  privacy     = var.admins_team.visibility
+  privacy     = var.admins_team.privacy
 }
 
 resource "github_team_members" "admins" {
@@ -76,7 +76,7 @@ resource "github_team" "members" {
 
   description = var.members_team.description
   name        = var.members_team.name
-  privacy     = var.members_team.visibility
+  privacy     = var.members_team.privacy
 }
 
 resource "github_team_members" "members" {
@@ -127,7 +127,7 @@ resource "github_team" "security_managers" {
 
   description = var.security_managers_team.description
   name        = var.security_managers_team.name
-  privacy     = var.security_managers_team.visibility
+  privacy     = var.security_managers_team.privacy
 }
 
 resource "github_team_members" "security_managers" {
