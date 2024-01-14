@@ -1,20 +1,18 @@
-name: CI-SCA
+name: scan-code
 
 on:
-  push:
-    branches: [main]
   pull_request:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
-  kics-scan:
+  scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Scan Repository
-        uses: checkmarx/kics-github-action@v1.7.0
+        uses: checkmarx/kics-github-action@8a44970e3d2eca668be41abe9d4e06709c3b3609 # v1.7.0
         with:
           disable_secrets: true
           enable_comments: true
