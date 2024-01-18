@@ -1,4 +1,4 @@
-name: cd-release
+name: release-pr
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  release:
+  update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

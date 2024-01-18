@@ -1,4 +1,4 @@
-name: check-pr-title
+name: check-pr
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
       - synchronize
 
 jobs:
-  check-title:
+  title:
     runs-on: ubuntu-latest
     steps:
       - uses: amannn/action-semantic-pull-request@e9fabac35e210fea40ca5b14c0da95a099eff26f # v5.4.0

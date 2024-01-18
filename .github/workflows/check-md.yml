@@ -1,4 +1,4 @@
-name: check-md-links
+name: check-md
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-links:
+  links:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -1,4 +1,4 @@
-name: scan-code
+name: check-code
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  scan:
+  kics:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
