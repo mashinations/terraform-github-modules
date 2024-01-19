@@ -9,6 +9,9 @@ on:
       - reopened
       - synchronize
 
+permissions:
+  pull-requests: read
+
 jobs:
   title:
     runs-on: ubuntu-latest
