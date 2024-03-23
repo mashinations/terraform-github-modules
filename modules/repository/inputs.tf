@@ -25,10 +25,8 @@ variable "branch_protections" {
   type = map(object({
     allows_deletions                = optional(bool, false)
     allows_force_pushes             = optional(bool, false)
-    blocks_creations                = optional(bool, false)
     enforce_admins                  = optional(bool, true)
     lock_branch                     = optional(bool, false)
-    push_restrictions               = optional(set(string), [])
     require_conversation_resolution = optional(bool, true)
     require_signed_commits          = optional(bool, false)
     required_linear_history         = optional(bool, false)
@@ -45,6 +43,10 @@ variable "branch_protections" {
     required_status_checks = optional(object({
       contexts = optional(set(string), [])
       strict   = optional(bool, true)
+    }), {})
+    restrict_pushes = optional(object({
+      blocks_creations = optional(bool, false)
+      push_allowances  = optional(set(string), [])
     }), {})
   }))
 }
@@ -172,5 +174,6 @@ variable "settings" {
     squash_merge_commit_message = optional(string, "COMMIT_MESSAGES")
     squash_merge_commit_title   = optional(string, "PR_TITLE")
     vulnerability_alerts        = optional(bool, true)
+    web_commit_signoff_required = optional(bool, false)
   })
 }

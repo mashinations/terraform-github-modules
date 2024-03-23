@@ -51,6 +51,7 @@ resource "github_repository" "this" {
   squash_merge_commit_message = var.settings.allow_squash_merge ? var.settings.squash_merge_commit_message : null
   squash_merge_commit_title   = var.settings.allow_squash_merge ? var.settings.squash_merge_commit_title : null
   vulnerability_alerts        = var.settings.vulnerability_alerts
+  web_commit_signoff_required = var.settings.web_commit_signoff_required
 
   lifecycle {
     ignore_changes = [
