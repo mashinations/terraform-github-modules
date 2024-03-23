@@ -30,6 +30,7 @@ resource "github_branch_protection" "for_pattern" {
   allows_deletions                = each.value.allows_deletions
   allows_force_pushes             = each.value.allows_force_pushes
   enforce_admins                  = each.value.enforce_admins
+  force_push_bypassers            = each.value.force_push_bypassers
   lock_branch                     = each.value.lock_branch
   require_conversation_resolution = each.value.require_conversation_resolution
   require_signed_commits          = each.value.require_signed_commits

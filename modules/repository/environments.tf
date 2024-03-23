@@ -4,7 +4,10 @@ resource "github_repository_environment" "identified_by" {
 
   environment = each.key
   repository  = github_repository.this.name
-  wait_timer  = each.value.wait_timer
+
+  can_admins_bypass   = each.value.can_admins_bypass
+  prevent_self_review = each.value.prevent_self_review
+  wait_timer          = each.value.wait_timer
 
   deployment_branch_policy {
     custom_branch_policies = each.value.deployment_branch_policy.custom_branch_policies
@@ -31,10 +34,10 @@ resource "github_actions_environment_secret" "identified_by" {
 
   environment = github_repository_environment.identified_by[each.value.env_name].environment
   repository  = github_repository.this.name
+  secret_name = each.value.secret_name
 
   encrypted_value = each.value.secret_value_type == "encrypted" ? each.value.secret_value : null
   plaintext_value = each.value.secret_value_type == "plaintext" ? each.value.secret_value : null
-  secret_name     = each.value.secret_name
 }
 
 resource "github_actions_environment_variable" "identified_by" {

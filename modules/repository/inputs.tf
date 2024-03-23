@@ -26,6 +26,7 @@ variable "branch_protections" {
     allows_deletions                = optional(bool, false)
     allows_force_pushes             = optional(bool, false)
     enforce_admins                  = optional(bool, true)
+    force_push_bypassers            = optional(set(string), [])
     lock_branch                     = optional(bool, false)
     require_conversation_resolution = optional(bool, true)
     require_signed_commits          = optional(bool, false)
@@ -124,7 +125,9 @@ variable "environments" {
     variables = optional(map(object({
       value = string
     })), {})
-    wait_timer = optional(number, null)
+    can_admins_bypass   = optional(bool, false)
+    prevent_self_review = optional(bool, true)
+    wait_timer          = optional(number, null)
   }))
 }
 
@@ -175,5 +178,17 @@ variable "settings" {
     squash_merge_commit_title   = optional(string, "PR_TITLE")
     vulnerability_alerts        = optional(bool, true)
     web_commit_signoff_required = optional(bool, false)
+
+    security_and_analysis = optional(object({
+      advanced_security = optional(object({
+        status = optional(string, "disabled")
+      }), {})
+      secret_scanning = optional(object({
+        status = optional(string, "disabled")
+      }), {})
+      secret_scanning_push_protection = optional(object({
+        status = optional(string, "disabled")
+      }), {})
+    }), {})
   })
 }

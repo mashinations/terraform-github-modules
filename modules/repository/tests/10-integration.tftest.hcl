@@ -137,6 +137,11 @@ run "test_defaults" {
     error_message = "Default value for the 'web_commit_signoff_required' field should be 'false'"
   }
 
+  assert { ## output.settings.security_and_analysis
+    condition     = length(output.settings.security_and_analysis) == 0
+    error_message = "Default value for the 'security_and_analysis' field should be empty"
+  }
+
   ## Feature Configuration - Actions
   assert { ## output.actions_permissions.allowed_actions
     condition     = output.actions_permissions.allowed_actions == "all"

@@ -18,6 +18,12 @@ repos:
       - id: pretty-format-json
         args: [--autofix]
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: cleanup-module-dirs
+        name: cleanup-module-dirs
+        entry: hooks/cleanup-module-dirs.sh
+        language: script
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.88.3
     hooks:
@@ -28,9 +34,3 @@ repos:
       - id: terraform_fmt
       - id: terraform_tflint
       - id: terraform_validate
-  - repo: local
-    hooks:
-      - id: cleanup-module-dirs
-        name: cleanup-module-dirs
-        entry: hooks/cleanup-module-dirs.sh
-        language: script
