@@ -12,7 +12,7 @@ resource "github_repository" "this" {
   visibility         = var.settings.visibility
 
   dynamic "template" {
-    for_each = var.settings.template != null ? [var.settings.template] : []
+    for_each = var.settings.template != null ? var.settings.template[*] : []
 
     content {
       owner      = template.value.owner
@@ -27,7 +27,7 @@ resource "github_repository" "this" {
   has_wiki        = var.settings.has_wiki
 
   dynamic "pages" {
-    for_each = var.settings.pages != null ? [var.settings.pages] : []
+    for_each = var.settings.pages != null ? var.settings.pages[*] : []
 
     content {
       source {
@@ -51,10 +51,39 @@ resource "github_repository" "this" {
   squash_merge_commit_message = var.settings.allow_squash_merge ? var.settings.squash_merge_commit_message : null
   squash_merge_commit_title   = var.settings.allow_squash_merge ? var.settings.squash_merge_commit_title : null
   vulnerability_alerts        = var.settings.vulnerability_alerts
+  web_commit_signoff_required = var.settings.web_commit_signoff_required
+
+  dynamic "security_and_analysis" {
+    for_each = (
+      var.settings.visibility != "public" &&
+      var.settings.security_and_analysis.advanced_security.status == "enabled" ? var.settings.security_and_analysis[*] : []
+    )
+
+    content {
+      dynamic "advanced_security" {
+        for_each = security_and_analysis.value.advanced_security[*]
+        content {
+          status = advanced_security.value.status
+        }
+      }
+      dynamic "secret_scanning" {
+        for_each = security_and_analysis.value.secret_scanning[*]
+        content {
+          status = secret_scanning.value.status
+        }
+      }
+      dynamic "secret_scanning_push_protection" {
+        for_each = security_and_analysis.value.secret_scanning_push_protection[*]
+        content {
+          status = secret_scanning_push_protection.value.status
+        }
+      }
+    }
+  }
 
   lifecycle {
     ignore_changes = [
-      ## Settings maintained by users and may change after creation
+      ## Settings maintained by users and likely to change after creation
       description, homepage_url, topics,
 
       ## Settings valid only when the repository is created and can
