@@ -7,16 +7,13 @@ variable "name" {
 variable "branches" {
   default     = {}
   description = "A map of branches to create in the repository"
-  type = map(object({
-    is_default    = optional(bool, false)
-    source_branch = optional(string, null)
-    source_sha    = optional(string, null)
-  }))
-
-  validation {
-    condition     = length({ for k, v in var.branches : k => v if v.is_default }) <= 1
-    error_message = "Only one branch can be configured as the default"
-  }
+  type = object({
+    default = optional(string, null)
+    managed = optional(map(object({
+      source_branch = optional(string, null)
+      source_sha    = optional(string, null)
+    })), {})
+  })
 }
 
 variable "branch_protections" {
@@ -26,12 +23,12 @@ variable "branch_protections" {
     allows_deletions                = optional(bool, false)
     allows_force_pushes             = optional(bool, false)
     enforce_admins                  = optional(bool, true)
-    force_push_bypassers            = optional(set(string), [])
     lock_branch                     = optional(bool, false)
     require_conversation_resolution = optional(bool, true)
     require_signed_commits          = optional(bool, false)
     required_linear_history         = optional(bool, false)
 
+    force_push_bypassers = optional(set(string), [])
     required_pull_request_reviews = optional(object({
       dismiss_stale_reviews           = optional(bool, true)
       dismissal_restrictions          = optional(set(number), [])
@@ -85,6 +82,7 @@ variable "actions" {
       patterns_allowed     = optional(set(string), null)
       verified_allowed     = optional(bool, true)
     }), {})
+    enabled = optional(bool, true)
     secrets = optional(map(object({
       value      = string
       value_type = optional(string, "encrypted")

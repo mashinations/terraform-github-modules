@@ -35,14 +35,15 @@ module "example" {
     main = {
       allows_deletions                = false
       allows_force_pushes             = false
-      blocks_creations                = false
       enforce_admins                  = true
       lock_branch                     = false
-      push_restrictions               = []
       require_conversation_resolution = true
       require_signed_commits          = false
       required_linear_history         = false
 
+      force_push_bypassers            = [
+        "/example-admin",
+      ]
       required_pull_request_reviews = {
         dismiss_stale_reviews           = true
         dismissal_restrictions          = []
@@ -55,6 +56,12 @@ module "example" {
       required_status_checks = {
         contexts = []
         strict   = true
+      }
+      restrict_pushes {
+        blocks_creations = true
+        push_allowances  = [
+          "example-org/example-admin",
+        ]
       }
     }
   }
@@ -173,9 +180,9 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_actions"></a> [actions](#input\_actions) | An object containing configuration settings for GitHub Actions | <pre>object({<br>    allowed_actions = optional(string, "all")<br>    allowed_actions_config = optional(object({<br>      github_owned_allowed = optional(bool, true)<br>      patterns_allowed     = optional(set(string), null)<br>      verified_allowed     = optional(bool, true)<br>    }), {})<br>    secrets = optional(map(object({<br>      value      = string<br>      value_type = optional(string, "encrypted")<br>    })), {})<br>    variables = optional(map(object({<br>      value = string<br>    })), {})<br>  })</pre> | `{}` | no |
-| <a name="input_branch_protections"></a> [branch\_protections](#input\_branch\_protections) | The branch protections to apply to the repository | <pre>map(object({<br>    allows_deletions                = optional(bool, false)<br>    allows_force_pushes             = optional(bool, false)<br>    enforce_admins                  = optional(bool, true)<br>    force_push_bypassers            = optional(set(string), [])<br>    lock_branch                     = optional(bool, false)<br>    require_conversation_resolution = optional(bool, true)<br>    require_signed_commits          = optional(bool, false)<br>    required_linear_history         = optional(bool, false)<br><br>    required_pull_request_reviews = optional(object({<br>      dismiss_stale_reviews           = optional(bool, true)<br>      dismissal_restrictions          = optional(set(number), [])<br>      pull_request_bypassers          = optional(set(string), [])<br>      require_code_owner_reviews      = optional(bool, true)<br>      required_approving_review_count = optional(number, 1)<br>      require_last_push_approval      = optional(bool, true)<br>      restrict_dismissals             = optional(bool, true)<br>    }), {})<br>    required_status_checks = optional(object({<br>      contexts = optional(set(string), [])<br>      strict   = optional(bool, true)<br>    }), {})<br>    restrict_pushes = optional(object({<br>      blocks_creations = optional(bool, false)<br>      push_allowances  = optional(set(string), [])<br>    }), {})<br>  }))</pre> | `{}` | no |
-| <a name="input_branches"></a> [branches](#input\_branches) | A map of branches to create in the repository | <pre>map(object({<br>    is_default    = optional(bool, false)<br>    source_branch = optional(string, null)<br>    source_sha    = optional(string, null)<br>  }))</pre> | `{}` | no |
+| <a name="input_actions"></a> [actions](#input\_actions) | An object containing configuration settings for GitHub Actions | <pre>object({<br>    allowed_actions = optional(string, "all")<br>    allowed_actions_config = optional(object({<br>      github_owned_allowed = optional(bool, true)<br>      patterns_allowed     = optional(set(string), null)<br>      verified_allowed     = optional(bool, true)<br>    }), {})<br>    enabled = optional(bool, true)<br>    secrets = optional(map(object({<br>      value      = string<br>      value_type = optional(string, "encrypted")<br>    })), {})<br>    variables = optional(map(object({<br>      value = string<br>    })), {})<br>  })</pre> | `{}` | no |
+| <a name="input_branch_protections"></a> [branch\_protections](#input\_branch\_protections) | The branch protections to apply to the repository | <pre>map(object({<br>    allows_deletions                = optional(bool, false)<br>    allows_force_pushes             = optional(bool, false)<br>    enforce_admins                  = optional(bool, true)<br>    lock_branch                     = optional(bool, false)<br>    require_conversation_resolution = optional(bool, true)<br>    require_signed_commits          = optional(bool, false)<br>    required_linear_history         = optional(bool, false)<br><br>    force_push_bypassers = optional(set(string), [])<br>    required_pull_request_reviews = optional(object({<br>      dismiss_stale_reviews           = optional(bool, true)<br>      dismissal_restrictions          = optional(set(number), [])<br>      pull_request_bypassers          = optional(set(string), [])<br>      require_code_owner_reviews      = optional(bool, true)<br>      required_approving_review_count = optional(number, 1)<br>      require_last_push_approval      = optional(bool, true)<br>      restrict_dismissals             = optional(bool, true)<br>    }), {})<br>    required_status_checks = optional(object({<br>      contexts = optional(set(string), [])<br>      strict   = optional(bool, true)<br>    }), {})<br>    restrict_pushes = optional(object({<br>      blocks_creations = optional(bool, false)<br>      push_allowances  = optional(set(string), [])<br>    }), {})<br>  }))</pre> | `{}` | no |
+| <a name="input_branches"></a> [branches](#input\_branches) | A map of branches to create in the repository | <pre>object({<br>    default = optional(string, null)<br>    managed = optional(map(object({<br>      source_branch = optional(string, null)<br>      source_sha    = optional(string, null)<br>    })), {})<br>  })</pre> | `{}` | no |
 | <a name="input_collaborators"></a> [collaborators](#input\_collaborators) | The teams and users to add as collaborators to the repository | <pre>object({<br>    teams = optional(object({<br>      admin    = optional(set(string), [])<br>      maintain = optional(set(string), [])<br>      pull     = optional(set(string), [])<br>      push     = optional(set(string), [])<br>      triage   = optional(set(string), [])<br>    }), {})<br>    users = optional(object({<br>      admin    = optional(set(string), [])<br>      maintain = optional(set(string), [])<br>      pull     = optional(set(string), [])<br>      push     = optional(set(string), [])<br>      triage   = optional(set(string), [])<br>    }), {})<br>  })</pre> | `{}` | no |
 | <a name="input_dependabot"></a> [dependabot](#input\_dependabot) | An object containing configuration settings for GitHub Dependabot | <pre>object({<br>    secrets = optional(map(object({<br>      value      = string<br>      value_type = optional(string, "encrypted")<br>    })), {})<br>  })</pre> | `{}` | no |
 | <a name="input_environments"></a> [environments](#input\_environments) | The environments to create and manage for the repository | <pre>map(object({<br>    deployment_branch_policy = optional(object({<br>      custom_branch_policies = optional(bool, false)<br>      protected_branches     = optional(bool, true)<br>    }), {})<br>    reviewers = optional(object({<br>      teams = optional(set(number), [])<br>      users = optional(set(number), [])<br>    }), {})<br>    secrets = optional(map(object({<br>      value      = string<br>      value_type = optional(string, "encrypted")<br>    })), {})<br>    variables = optional(map(object({<br>      value = string<br>    })), {})<br>    can_admins_bypass   = optional(bool, false)<br>    prevent_self_review = optional(bool, true)<br>    wait_timer          = optional(number, null)<br>  }))</pre> | `{}` | no |
@@ -189,6 +196,7 @@ No modules.
 | <a name="output_actions_permissions"></a> [actions\_permissions](#output\_actions\_permissions) | The current permissions for Actions |
 | <a name="output_actions_secrets"></a> [actions\_secrets](#output\_actions\_secrets) | A map of Actions secret objects keyed by secret name |
 | <a name="output_actions_variables"></a> [actions\_variables](#output\_actions\_variables) | A map of Actions variable objects keyed by variable name |
+| <a name="output_branch_default"></a> [branch\_default](#output\_branch\_default) | The default branch object |
 | <a name="output_branch_protections"></a> [branch\_protections](#output\_branch\_protections) | A map of branch protection objects keyed by pattern |
 | <a name="output_branches"></a> [branches](#output\_branches) | A map of branch objects keyed by branch name |
 | <a name="output_collaborators"></a> [collaborators](#output\_collaborators) | The collaborators object listing teams and users with access |

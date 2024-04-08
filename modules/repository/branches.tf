@@ -1,23 +1,22 @@
+resource "github_branch_default" "this" {
+  count = var.branches.default != null ? 1 : 0
+
+  branch     = var.branches.default
+  repository = github_repository.this.name
+
+  ## The default branch is always renamed, rather than being
+  ## created/swapped, preventing scenarios in which a branch
+  ## could be unexpectedly/unintentionally deleted.
+  rename = true
+}
 resource "github_branch" "identified_by" {
-  for_each = var.branches
+  depends_on = [github_branch_default.this]
+  for_each   = var.branches.managed
 
   branch        = each.key
   repository    = github_repository.this.name
   source_branch = each.value.source_branch
   source_sha    = each.value.source_sha
-}
-
-resource "github_branch_default" "this" {
-  depends_on = [github_branch.identified_by]
-  for_each   = { for k, v in var.branches : k => v if v.is_default }
-
-  branch     = each.key
-  repository = github_repository.this.name
-
-  ## There's not really a reasonable way to support renaming
-  ## the default branch without causing grief for the module
-  ## user, so it's disabled for now.
-  rename = false
 }
 
 resource "github_branch_protection" "for_pattern" {

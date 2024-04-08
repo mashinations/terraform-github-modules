@@ -2,6 +2,7 @@ resource "github_actions_repository_permissions" "this" {
   repository = github_repository.this.name
 
   allowed_actions = var.actions.allowed_actions
+  enabled         = var.actions.enabled
 
   dynamic "allowed_actions_config" {
     for_each = var.actions.allowed_actions == "selected" ? var.actions.allowed_actions_config[*] : []
