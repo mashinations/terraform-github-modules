@@ -1,7 +1,13 @@
 locals {
+  _builtin_collaborator_roles = ["admin", "maintain", "push", "triage", "pull"]
+
   ## Ensure that, if a team or user is defined in more than one role-group, they
   ## are assigned the role granting the least permissions.
-  collaborator_roles = tolist(["admin", "maintain", "push", "triage", "pull"])
+  collaborator_roles = distinct(concat(
+    local._builtin_collaborator_roles,
+    tolist(setsubtract(keys(var.collaborators.teams), local._builtin_collaborator_roles)),
+    tolist(setsubtract(keys(var.collaborators.users), local._builtin_collaborator_roles)),
+  ))
   collaborating_teams = merge([
     for role in local.collaborator_roles : merge(
       { for i in lookup(var.collaborators.teams, role, []) : replace(lower(i), "/[^a-z0-9_]/", "-") => role },
