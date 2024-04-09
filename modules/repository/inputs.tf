@@ -7,16 +7,13 @@ variable "name" {
 variable "branches" {
   default     = {}
   description = "A map of branches to create in the repository"
-  type = map(object({
-    is_default    = optional(bool, false)
-    source_branch = optional(string, null)
-    source_sha    = optional(string, null)
-  }))
-
-  validation {
-    condition     = length({ for k, v in var.branches : k => v if v.is_default }) <= 1
-    error_message = "Only one branch can be configured as the default"
-  }
+  type = object({
+    default = optional(string, null)
+    managed = optional(map(object({
+      source_branch = optional(string, null)
+      source_sha    = optional(string, null)
+    })), {})
+  })
 }
 
 variable "branch_protections" {
@@ -25,14 +22,13 @@ variable "branch_protections" {
   type = map(object({
     allows_deletions                = optional(bool, false)
     allows_force_pushes             = optional(bool, false)
-    blocks_creations                = optional(bool, false)
     enforce_admins                  = optional(bool, true)
     lock_branch                     = optional(bool, false)
-    push_restrictions               = optional(set(string), [])
     require_conversation_resolution = optional(bool, true)
     require_signed_commits          = optional(bool, false)
     required_linear_history         = optional(bool, false)
 
+    force_push_bypassers = optional(set(string), [])
     required_pull_request_reviews = optional(object({
       dismiss_stale_reviews           = optional(bool, true)
       dismissal_restrictions          = optional(set(number), [])
@@ -45,6 +41,10 @@ variable "branch_protections" {
     required_status_checks = optional(object({
       contexts = optional(set(string), [])
       strict   = optional(bool, true)
+    }), {})
+    restrict_pushes = optional(object({
+      blocks_creations = optional(bool, false)
+      push_allowances  = optional(set(string), [])
     }), {})
   }))
 }
@@ -82,6 +82,7 @@ variable "actions" {
       patterns_allowed     = optional(set(string), null)
       verified_allowed     = optional(bool, true)
     }), {})
+    enabled = optional(bool, true)
     secrets = optional(map(object({
       value      = string
       value_type = optional(string, "encrypted")
@@ -122,7 +123,9 @@ variable "environments" {
     variables = optional(map(object({
       value = string
     })), {})
-    wait_timer = optional(number, null)
+    can_admins_bypass   = optional(bool, false)
+    prevent_self_review = optional(bool, true)
+    wait_timer          = optional(number, null)
   }))
 }
 
@@ -172,5 +175,18 @@ variable "settings" {
     squash_merge_commit_message = optional(string, "COMMIT_MESSAGES")
     squash_merge_commit_title   = optional(string, "PR_TITLE")
     vulnerability_alerts        = optional(bool, true)
+    web_commit_signoff_required = optional(bool, false)
+
+    security_and_analysis = optional(object({
+      advanced_security = optional(object({
+        status = optional(string, "disabled")
+      }), {})
+      secret_scanning = optional(object({
+        status = optional(string, "disabled")
+      }), {})
+      secret_scanning_push_protection = optional(object({
+        status = optional(string, "disabled")
+      }), {})
+    }), {})
   })
 }

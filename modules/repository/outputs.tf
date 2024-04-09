@@ -16,6 +16,10 @@ output "branches" {
   description = "A map of branch objects keyed by branch name"
   value       = github_branch.identified_by
 }
+output "branch_default" {
+  description = "The default branch object"
+  value       = one(github_branch_default.this)
+}
 output "branch_protections" {
   description = "A map of branch protection objects keyed by pattern"
   value       = github_branch_protection.for_pattern

@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.6.0
     hooks:
       - id: check-case-conflict
       - id: check-docstring-first
@@ -18,8 +18,14 @@ repos:
       - id: pretty-format-json
         args: [--autofix]
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: cleanup-module-dirs
+        name: cleanup-module-dirs
+        entry: hooks/cleanup-module-dirs.sh
+        language: script
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.58.0
+    rev: v1.88.4
     hooks:
       - id: terraform_docs
         args:
@@ -28,9 +34,3 @@ repos:
       - id: terraform_fmt
       - id: terraform_tflint
       - id: terraform_validate
-  - repo: local
-    hooks:
-      - id: cleanup-module-dirs
-        name: cleanup-module-dirs
-        entry: hooks/cleanup-module-dirs.sh
-        language: script
