@@ -37,7 +37,7 @@ run "check_defaults" {
 }
 
 ## ============================================================================================== ##
-##                             Test - Feature Configuration for Admins                            ##
+##                        Test - Feature Configuration - Admin Permissions                        ##
 ## ============================================================================================== ##
 run "check_feature_admins" {
   command = apply
@@ -82,7 +82,7 @@ run "check_feature_admins" {
 }
 
 ## ============================================================================================== ##
-##                          Test - Feature Configuration for Maintainers                          ##
+##                       Test - Feature Configuration - Maintain Permissions                      ##
 ## ============================================================================================== ##
 run "check_feature_maintainers" {
   command = apply
@@ -125,9 +125,52 @@ run "check_feature_maintainers" {
     error_message = "Value for 'collaborators.user.permission' should be 'maintain'"
   }
 }
+run "check_feature_maintainers_least_privilege" {
+  command = apply
+  variables {
+    name = run._setup_.repository_name
+    collaborators = {
+      teams = {
+        admin    = ["maintainers"]
+        maintain = ["maintainers"]
+      }
+      users = {
+        admin    = ["mashinations-flex"]
+        maintain = ["mashinations-flex"]
+      }
+    }
+    settings = { archive_on_destroy = run._setup_.archive_repository }
+  }
+
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team) != null
+    error_message = "Value for 'collaborators.team' should not be 'null'"
+  }
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team).team_id == "maintainers"
+    error_message = "Value for 'collaborators.team.team_id' should be 'maintainers'"
+  }
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team).permission == "maintain"
+    error_message = "Value for 'collaborators.team.permission' should be 'maintain'"
+  }
+
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user) != null
+    error_message = "Value for 'collaborators.user' should not be 'null'"
+  }
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user).username == "mashinations-flex"
+    error_message = "Value for 'collaborators.user.username' should be 'mashinations-flex'"
+  }
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user).permission == "maintain"
+    error_message = "Value for 'collaborators.user.permission' should be 'maintain'"
+  }
+}
 
 ## ============================================================================================== ##
-##                            Test - Feature Configuration for Pullers                            ##
+##                         Test - Feature Configuration - Pull Permissions                        ##
 ## ============================================================================================== ##
 run "check_feature_pullers" {
   command = apply
@@ -170,9 +213,52 @@ run "check_feature_pullers" {
     error_message = "Value for 'collaborators.user.permission' should be 'pull'"
   }
 }
+run "check_feature_pullers_least_privilege" {
+  command = apply
+  variables {
+    name = run._setup_.repository_name
+    collaborators = {
+      teams = {
+        pull   = ["pullers"]
+        triage = ["pullers"]
+      }
+      users = {
+        pull   = ["mashinations-flex"]
+        triage = ["mashinations-flex"]
+      }
+    }
+    settings = { archive_on_destroy = run._setup_.archive_repository }
+  }
+
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team) != null
+    error_message = "Value for 'collaborators.team' should not be 'null'"
+  }
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team).team_id == "pullers"
+    error_message = "Value for 'collaborators.team.team_id' should be 'pullers'"
+  }
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team).permission == "pull"
+    error_message = "Value for 'collaborators.team.permission' should be 'pull'"
+  }
+
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user) != null
+    error_message = "Value for 'collaborators.user' should not be 'null'"
+  }
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user).username == "mashinations-flex"
+    error_message = "Value for 'collaborators.user.username' should be 'mashinations-flex'"
+  }
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user).permission == "pull"
+    error_message = "Value for 'collaborators.user.permission' should be 'pull'"
+  }
+}
 
 ## ============================================================================================== ##
-##                            Test - Feature Configuration for Pushers                            ##
+##                         Test - Feature Configuration - Push Permissions                        ##
 ## ============================================================================================== ##
 run "check_feature_pushers" {
   command = apply
@@ -215,9 +301,52 @@ run "check_feature_pushers" {
     error_message = "Value for 'collaborators.user.permission' should be 'push'"
   }
 }
+run "check_feature_pushers_least_privilege" {
+  command = apply
+  variables {
+    name = run._setup_.repository_name
+    collaborators = {
+      teams = {
+        maintain = ["pushers"]
+        push     = ["pushers"]
+      }
+      users = {
+        maintain = ["mashinations-flex"]
+        push     = ["mashinations-flex"]
+      }
+    }
+    settings = { archive_on_destroy = run._setup_.archive_repository }
+  }
+
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team) != null
+    error_message = "Value for 'collaborators.team' should not be 'null'"
+  }
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team).team_id == "pushers"
+    error_message = "Value for 'collaborators.team.team_id' should be 'pushers'"
+  }
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team).permission == "push"
+    error_message = "Value for 'collaborators.team.permission' should be 'push'"
+  }
+
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user) != null
+    error_message = "Value for 'collaborators.user' should not be 'null'"
+  }
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user).username == "mashinations-flex"
+    error_message = "Value for 'collaborators.user.username' should be 'mashinations-flex'"
+  }
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user).permission == "push"
+    error_message = "Value for 'collaborators.user.permission' should be 'push'"
+  }
+}
 
 ## ============================================================================================== ##
-##                            Test - Feature Configuration for Triagers                           ##
+##                        Test - Feature Configuration - Triage Permissions                       ##
 ## ============================================================================================== ##
 run "check_feature_triagers" {
   command = apply
@@ -254,6 +383,49 @@ run "check_feature_triagers" {
   assert { ## output.collaborators.user
     condition     = one(output.collaborators.user).username == "mashinations-user"
     error_message = "Value for 'collaborators.user.username' should be 'mashinations-user'"
+  }
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user).permission == "triage"
+    error_message = "Value for 'collaborators.user.permission' should be 'triage'"
+  }
+}
+run "check_feature_triagers_least_privilege" {
+  command = apply
+  variables {
+    name = run._setup_.repository_name
+    collaborators = {
+      teams = {
+        push   = ["triagers"]
+        triage = ["triagers"]
+      }
+      users = {
+        push   = ["mashinations-flex"]
+        triage = ["mashinations-flex"]
+      }
+    }
+    settings = { archive_on_destroy = run._setup_.archive_repository }
+  }
+
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team) != null
+    error_message = "Value for 'collaborators.team' should not be 'null'"
+  }
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team).team_id == "triagers"
+    error_message = "Value for 'collaborators.team.team_id' should be 'triagers'"
+  }
+  assert { ## output.collaborators.team
+    condition     = one(output.collaborators.team).permission == "triage"
+    error_message = "Value for 'collaborators.team.permission' should be 'triage'"
+  }
+
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user) != null
+    error_message = "Value for 'collaborators.user' should not be 'null'"
+  }
+  assert { ## output.collaborators.user
+    condition     = one(output.collaborators.user).username == "mashinations-flex"
+    error_message = "Value for 'collaborators.user.username' should be 'mashinations-flex'"
   }
   assert { ## output.collaborators.user
     condition     = one(output.collaborators.user).permission == "triage"

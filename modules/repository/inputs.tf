@@ -54,20 +54,8 @@ variable "collaborators" {
   default     = {}
   description = "The teams and users to add as collaborators to the repository"
   type = object({
-    teams = optional(object({
-      admin    = optional(set(string), [])
-      maintain = optional(set(string), [])
-      pull     = optional(set(string), [])
-      push     = optional(set(string), [])
-      triage   = optional(set(string), [])
-    }), {})
-    users = optional(object({
-      admin    = optional(set(string), [])
-      maintain = optional(set(string), [])
-      pull     = optional(set(string), [])
-      push     = optional(set(string), [])
-      triage   = optional(set(string), [])
-    }), {})
+    teams = optional(map(set(string)), {})
+    users = optional(map(set(string)), {})
   })
 }
 
