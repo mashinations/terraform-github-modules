@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Scan Repository
-        uses: checkmarx/kics-github-action@d1b692d84c536f4e8696954ce7aab6818f95f5bc # v2.0.0
+        uses: checkmarx/kics-github-action@aacf8e81cd48e227259c937c215b352e02ad447a # v2.1.0
         with:
           disable_secrets: true
           enable_comments: true
