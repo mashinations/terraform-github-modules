@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/mashinations/terraform-github-modules/compare/v0.2.0...v0.2.1) (2024-10-15)
+
+
+### Bug Fixes
+
+* Update `organization` Module Version Constraint ([#31](https://github.com/mashinations/terraform-github-modules/issues/31)) ([abbbfb3](https://github.com/mashinations/terraform-github-modules/commit/abbbfb3159e753eabf7152c4f868a523f5dbc1ea))
+
 ## [0.2.0](https://github.com/mashinations/terraform-github-modules/compare/v0.1.0...v0.2.0) (2024-05-07)
 
 
